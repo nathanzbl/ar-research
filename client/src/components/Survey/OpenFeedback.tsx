@@ -41,7 +41,7 @@ export function OpenFeedback({ onComplete, onBack, saveResponse }: OpenFeedbackP
           question="Q14. What did you like most about this menu?"
           value={q14}
           onChange={setQ14}
-          placeholder="Please share your thoughts..."
+          placeholder="Share your thoughts..."
         />
       )}
 
@@ -50,7 +50,7 @@ export function OpenFeedback({ onComplete, onBack, saveResponse }: OpenFeedbackP
           question="Q15. What did you find confusing or frustrating?"
           value={q15}
           onChange={setQ15}
-          placeholder="Please share your suggestions..."
+          placeholder="Share your suggestions..."
         />
       )}
 
@@ -59,7 +59,7 @@ export function OpenFeedback({ onComplete, onBack, saveResponse }: OpenFeedbackP
           question="Q16. How does this menu compare to other menus you've used in restaurants?"
           value={q16}
           onChange={setQ16}
-          placeholder="Optional - share any other thoughts..."
+          placeholder="Share any other thoughts..."
         />
       )}
 
