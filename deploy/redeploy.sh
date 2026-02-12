@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-APP_DIR="/home/ubuntu/emmalee_site"
+APP_DIR="/home/ubuntu/ar-research"
 
 cd "$APP_DIR"
 

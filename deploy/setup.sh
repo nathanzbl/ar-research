@@ -2,7 +2,7 @@
 set -euo pipefail
 
 DOMAIN="menu.byuisresearch.com"
-APP_DIR="/home/ubuntu/emmalee_site"
+APP_DIR="/home/ubuntu/ar-research"
 
 echo "=== Installing Node.js 20 via NodeSource ==="
 if ! command -v node &>/dev/null; then
