@@ -1,13 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import surveyRoutes from './routes/survey.js';
 import adminRoutes from './routes/admin.js';
 import { initDatabase } from './db/client.js';
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env';
 dotenv.config({ path: envFile });
@@ -26,13 +22,6 @@ app.use('/api/admin', adminRoutes);
 // Health check
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok' });
-});
-
-// Serve client build
-const clientDist = path.join(__dirname, '../../client/dist');
-app.use(express.static(clientDist));
-app.get('*', (_req, res) => {
-  res.sendFile(path.join(clientDist, 'index.html'));
 });
 
 // Initialize database and start server

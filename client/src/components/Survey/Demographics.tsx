@@ -106,14 +106,14 @@ export function Demographics({ onComplete, onBack, saveResponse }: DemographicsP
             <input
               type="range"
               min={18}
-              max={100}
+              max={65}
               value={age}
               onChange={(e) => setAge(Number(e.target.value))}
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
             />
             <div className="flex justify-between text-sm text-byu-gray">
               <span>18</span>
-              <span>100</span>
+              <span>65</span>
             </div>
           </div>
         </div>
