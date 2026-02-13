@@ -144,4 +144,22 @@ router.post('/screen-out', async (req: Request<object, object, SessionIdBody>, r
   }
 });
 
+// Delete an incomplete session (called via sendBeacon on page unload)
+router.post('/abandon', async (req: Request<object, object, SessionIdBody>, res: Response) => {
+  try {
+    const { sessionId } = req.body;
+
+    // Only delete if session is not completed (safety check)
+    await query(
+      `DELETE FROM sessions WHERE id = $1 AND completed_at IS NULL`,
+      [sessionId]
+    );
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error abandoning session:', error);
+    res.status(500).json({ error: 'Failed to abandon session' });
+  }
+});
+
 export default router;

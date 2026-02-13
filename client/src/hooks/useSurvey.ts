@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { SurveyState, SurveyBlock, Session } from '../types/survey';
 import { useDeviceDetect } from './useDeviceDetect';
 
@@ -55,6 +55,47 @@ export function useSurvey() {
   const [navigatingBack, setNavigatingBack] = useState(false);
 
   const [skipIdempotency, setSkipIdempotency] = useState(false);
+
+  // Track whether the survey is actively in progress (past screening, not yet finished)
+  const sessionRef = useRef(state.session);
+  const isActiveRef = useRef(false);
+  sessionRef.current = state.session;
+  isActiveRef.current = !!(
+    state.session &&
+    !state.isComplete &&
+    !state.isScreenedOut &&
+    state.currentBlock !== 'screening' &&
+    state.currentBlock !== 'end_screen'
+  );
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isActiveRef.current) {
+        e.preventDefault();
+        e.returnValue = 'You will lose all your responses and have to restart. Are you sure?';
+      }
+    };
+
+    const handleUnload = () => {
+      if (isActiveRef.current && sessionRef.current) {
+        navigator.sendBeacon(
+          '/api/survey/abandon',
+          new Blob(
+            [JSON.stringify({ sessionId: sessionRef.current.id })],
+            { type: 'application/json' }
+          )
+        );
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('unload', handleUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('unload', handleUnload);
+    };
+  }, []);
 
   const startSurvey = useCallback(async () => {
     // Condition type: mobile = ar_menu, desktop = menu_image_0 or menu_image_1
