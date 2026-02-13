@@ -5,6 +5,7 @@ interface DemographicsProps {
   onComplete: () => void;
   onBack: () => void;
   saveResponse: (questionId: string, value: string) => void;
+  startAtEnd?: boolean;
 }
 
 
@@ -25,11 +26,11 @@ const arExtentOptions = [
   { value: 'occasionally', label: 'Occasionally (used it a few times for fun or curiosity)' },
   { value: 'moderately', label: 'Moderately (used it multiple times across different apps or situations)' },
   { value: 'frequently', label: 'Frequently (use AR features often)' },
-  { value: 'very_frequently', label: 'Very frequently (AR is a regular part of my app or technology use)' },
+  { value: 'very_frequently', label: 'Very frequently (AR is a regular part of an app or technology I use)' },
 ];
 
-export function Demographics({ onComplete, onBack, saveResponse }: DemographicsProps) {
-  const [step, setStep] = useState(0);
+export function Demographics({ onComplete, onBack, saveResponse, startAtEnd }: DemographicsProps) {
+  const [step, setStep] = useState(startAtEnd ? 5 : 0);
   const [age, setAge] = useState(18);
   const [gender, setGender] = useState('');
   const [major, setMajor] = useState('');
@@ -95,7 +96,7 @@ export function Demographics({ onComplete, onBack, saveResponse }: DemographicsP
       {step === 0 && (
         <div className="space-y-4">
           <p className="text-lg font-medium text-byu-dark">
-            Q17. What is your age?
+            What is your age?
             <span className="text-byu-error ml-1">*</span>
           </p>
           <div className="space-y-4">
@@ -121,7 +122,7 @@ export function Demographics({ onComplete, onBack, saveResponse }: DemographicsP
 
       {step === 1 && (
         <SingleChoice
-          question="Q18. What is your gender?"
+          question="What is your gender?"
           options={genderOptions}
           value={gender}
           onChange={setGender}
@@ -131,7 +132,7 @@ export function Demographics({ onComplete, onBack, saveResponse }: DemographicsP
 
       {step === 2 && (
         <TextInput
-          question="Q19. What is your major/field of study?"
+          question="What is your major/field of study?"
           value={major}
           onChange={setMajor}
           placeholder="e.g., Computer Science, Business, Psychology"
@@ -141,18 +142,44 @@ export function Demographics({ onComplete, onBack, saveResponse }: DemographicsP
       )}
 
       {step === 3 && (
-        <SingleChoice
-          question="Q25. Have you ever used augmented reality (AR) technology before?"
-          options={arExperienceOptions}
-          value={arExperience}
-          onChange={setArExperience}
-          required
-        />
+        <div className="space-y-4">
+          <div>
+            <p className="text-lg font-medium text-byu-dark">
+              Have you ever used augmented reality (AR) technology before?
+              <span className="text-byu-error ml-1">*</span>
+            </p>
+            <p className="text-sm text-byu-gray mt-2">
+              Augmented reality (AR) is technology that overlays digital content onto the real world through your phone or device. Examples include Snapchat or Instagram face filters, Pokémon Go, virtual try-on features (like seeing furniture in your room or makeup on your face).
+            </p>
+          </div>
+          <div className="space-y-2">
+            {arExperienceOptions.map((option) => (
+              <label
+                key={option.value}
+                className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                  arExperience === option.value
+                    ? 'border-byu-navy bg-byu-navy/5'
+                    : 'border-gray-200 hover:border-byu-navy/30'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="ar-experience"
+                  value={option.value}
+                  checked={arExperience === option.value}
+                  onChange={(e) => setArExperience(e.target.value)}
+                  className="h-4 w-4 text-byu-navy focus:ring-byu-navy border-gray-300"
+                />
+                <span className="ml-3 text-byu-dark">{option.label}</span>
+              </label>
+            ))}
+          </div>
+        </div>
       )}
 
       {step === 4 && (
         <SingleChoice
-          question="Q26. To what extent have you used augmented reality (AR)?"
+          question="To what extent have you used augmented reality (AR)?"
           options={arExtentOptions}
           value={arExtent}
           onChange={setArExtent}
@@ -163,7 +190,7 @@ export function Demographics({ onComplete, onBack, saveResponse }: DemographicsP
       {step === 5 && (
         <div className="space-y-4">
           <p className="text-lg font-medium text-byu-dark">
-            Q27. In general, when I go to a restaurant, price plays a role in what I order.
+            In general, when I go to a restaurant, price plays a role in what I order.
             <span className="text-byu-error ml-1">*</span>
           </p>
           <div className="space-y-4">

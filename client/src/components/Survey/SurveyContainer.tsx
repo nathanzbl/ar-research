@@ -16,6 +16,7 @@ export function SurveyContainer() {
     state,
     deviceType,
     menuImageIndex,
+    navigatingBack,
     startSurvey,
     saveResponse,
     nextBlock,
@@ -122,6 +123,7 @@ export function SurveyContainer() {
             onComplete={nextBlock}
             onBack={prevBlock}
             saveResponse={saveResponse}
+            startAtEnd={navigatingBack}
           />
         );
 
@@ -131,6 +133,7 @@ export function SurveyContainer() {
             onComplete={nextBlock}
             onBack={prevBlock}
             saveResponse={saveResponse}
+            startAtEnd={navigatingBack}
           />
         );
 
@@ -140,6 +143,7 @@ export function SurveyContainer() {
             onComplete={nextBlock}
             onBack={prevBlock}
             saveResponse={saveResponse}
+            startAtEnd={navigatingBack}
           />
         );
 
@@ -149,6 +153,7 @@ export function SurveyContainer() {
             onComplete={nextBlock}
             onBack={prevBlock}
             saveResponse={saveResponse}
+            startAtEnd={navigatingBack}
           />
         );
 
@@ -158,6 +163,7 @@ export function SurveyContainer() {
             onComplete={completeSurvey}
             onBack={prevBlock}
             saveResponse={saveResponse}
+            startAtEnd={navigatingBack}
           />
         );
 

@@ -5,6 +5,7 @@ interface ExperienceRatingsProps {
   onComplete: () => void;
   onBack: () => void;
   saveResponse: (questionId: string, value: string | number) => void;
+  startAtEnd?: boolean;
 }
 
 const usabilityItems = [
@@ -27,8 +28,8 @@ const satisfactionItems = [
 
 const scaleLabels = ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree'];
 
-export function ExperienceRatings({ onComplete, onBack, saveResponse }: ExperienceRatingsProps) {
-  const [step, setStep] = useState(0);
+export function ExperienceRatings({ onComplete, onBack, saveResponse, startAtEnd }: ExperienceRatingsProps) {
+  const [step, setStep] = useState(startAtEnd ? 2 : 0);
   const [usabilityRatings, setUsabilityRatings] = useState<Record<string, number>>({});
   const [satisfactionRatings, setSatisfactionRatings] = useState<Record<string, number>>({});
   const [confidence, setConfidence] = useState(50);
@@ -83,7 +84,7 @@ export function ExperienceRatings({ onComplete, onBack, saveResponse }: Experien
     <div className="space-y-6">
       {step === 0 && (
         <LikertMatrix
-          question="Q8. Please rate your agreement with the following statements about the menu usability:"
+          question="Please rate your agreement with the following statements about the menu usability:"
           items={usabilityItems}
           scaleLabels={scaleLabels}
           values={usabilityRatings}
@@ -94,7 +95,7 @@ export function ExperienceRatings({ onComplete, onBack, saveResponse }: Experien
 
       {step === 1 && (
         <LikertMatrix
-          question="Q9. Please rate your agreement with the following statements about your overall satisfaction:"
+          question="Please rate your agreement with the following statements about your overall satisfaction:"
           items={satisfactionItems}
           scaleLabels={scaleLabels}
           values={satisfactionRatings}
@@ -105,7 +106,7 @@ export function ExperienceRatings({ onComplete, onBack, saveResponse }: Experien
 
       {step === 2 && (
         <Slider
-          question="Q10. How confident are you in the menu choice you made?"
+          question="How confident are you in the menu choice you made?"
           min={0}
           max={100}
           minLabel="Not at all confident"

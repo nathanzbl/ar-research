@@ -5,10 +5,11 @@ interface OpenFeedbackProps {
   onComplete: () => void;
   onBack: () => void;
   saveResponse: (questionId: string, value: string) => void;
+  startAtEnd?: boolean;
 }
 
-export function OpenFeedback({ onComplete, onBack, saveResponse }: OpenFeedbackProps) {
-  const [step, setStep] = useState(0);
+export function OpenFeedback({ onComplete, onBack, saveResponse, startAtEnd }: OpenFeedbackProps) {
+  const [step, setStep] = useState(startAtEnd ? 2 : 0);
   const [q14, setQ14] = useState('');
   const [q15, setQ15] = useState('');
   const [q16, setQ16] = useState('');
@@ -26,6 +27,15 @@ export function OpenFeedback({ onComplete, onBack, saveResponse }: OpenFeedbackP
     }
   };
 
+  const canProceed = () => {
+    switch (step) {
+      case 0: return q14.trim() !== '';
+      case 1: return q15.trim() !== '';
+      case 2: return q16.trim() !== '';
+      default: return false;
+    }
+  };
+
   const handleBack = () => {
     if (step > 0) {
       setStep(step - 1);
@@ -38,28 +48,31 @@ export function OpenFeedback({ onComplete, onBack, saveResponse }: OpenFeedbackP
     <div className="space-y-6">
       {step === 0 && (
         <TextInput
-          question="Q14. What did you like most about this menu?"
+          question="What did you like most about this menu?"
           value={q14}
           onChange={setQ14}
           placeholder="Share your thoughts..."
+          required
         />
       )}
 
       {step === 1 && (
         <TextInput
-          question="Q15. What did you find confusing or frustrating?"
+          question="What did you find confusing or frustrating?"
           value={q15}
           onChange={setQ15}
           placeholder="Share your suggestions..."
+          required
         />
       )}
 
       {step === 2 && (
         <TextInput
-          question="Q16. How does this menu compare to other menus you've used in restaurants?"
+          question="How does this menu compare to other menus you've used in restaurants?"
           value={q16}
           onChange={setQ16}
           placeholder="Share any other thoughts..."
+          required
         />
       )}
 
@@ -72,7 +85,12 @@ export function OpenFeedback({ onComplete, onBack, saveResponse }: OpenFeedbackP
         </button>
         <button
           onClick={handleNext}
-          className="flex-1 py-3 px-6 rounded-lg font-medium transition-colors bg-byu-navy text-white hover:bg-byu-royal"
+          disabled={!canProceed()}
+          className={`flex-1 py-3 px-6 rounded-lg font-medium transition-colors ${
+            canProceed()
+              ? 'bg-byu-navy text-white hover:bg-byu-royal'
+              : 'bg-gray-200 text-byu-gray cursor-not-allowed'
+          }`}
         >
           Continue
         </button>

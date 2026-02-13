@@ -49,7 +49,7 @@ export function ScreeningBlock({ onComplete, onScreenOut, saveResponse }: Screen
 
       {step === 0 && (
         <SingleChoice
-          question="Q1. Are you 18 years of age or older?"
+          question="Are you 18 years of age or older?"
           options={[
             { value: 'yes', label: 'Yes' },
             { value: 'no', label: 'No' },
@@ -62,7 +62,7 @@ export function ScreeningBlock({ onComplete, onScreenOut, saveResponse }: Screen
 
       {step === 1 && (
         <SingleChoice
-          question="Q2. Are you currently a BYU student?"
+          question="Are you currently a BYU student?"
           options={[
             { value: 'yes', label: 'Yes' },
             { value: 'no', label: 'No' },

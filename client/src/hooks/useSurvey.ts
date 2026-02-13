@@ -52,6 +52,8 @@ export function useSurvey() {
     isScreenedOut: false,
   });
 
+  const [navigatingBack, setNavigatingBack] = useState(false);
+
   const [skipIdempotency, setSkipIdempotency] = useState(false);
 
   const startSurvey = useCallback(async () => {
@@ -131,6 +133,7 @@ export function useSurvey() {
   }, [state.session]);
 
   const nextBlock = useCallback(() => {
+    setNavigatingBack(false);
     setState(prev => {
       const currentIndex = BLOCK_ORDER.indexOf(prev.currentBlock);
       if (currentIndex < BLOCK_ORDER.length - 1) {
@@ -141,6 +144,7 @@ export function useSurvey() {
   }, []);
 
   const prevBlock = useCallback(() => {
+    setNavigatingBack(true);
     setState(prev => {
       const currentIndex = BLOCK_ORDER.indexOf(prev.currentBlock);
       if (currentIndex > 0) {
@@ -206,6 +210,7 @@ export function useSurvey() {
     state,
     deviceType,
     menuImageIndex,
+    navigatingBack,
     startSurvey,
     saveResponse,
     nextBlock,

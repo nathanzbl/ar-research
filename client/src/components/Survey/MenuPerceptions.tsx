@@ -5,10 +5,11 @@ interface MenuPerceptionsProps {
   onComplete: () => void;
   onBack: () => void;
   saveResponse: (questionId: string, value: string) => void;
+  startAtEnd?: boolean;
 }
 
-export function MenuPerceptions({ onComplete, onBack, saveResponse }: MenuPerceptionsProps) {
-  const [step, setStep] = useState(0);
+export function MenuPerceptions({ onComplete, onBack, saveResponse, startAtEnd }: MenuPerceptionsProps) {
+  const [step, setStep] = useState(startAtEnd ? 2 : 0);
   const [q11, setQ11] = useState<boolean | null>(null);
   const [q12, setQ12] = useState<boolean | null>(null);
   const [q13, setQ13] = useState<boolean | null>(null);
@@ -47,7 +48,7 @@ export function MenuPerceptions({ onComplete, onBack, saveResponse }: MenuPercep
     <div className="space-y-6">
       {step === 0 && (
         <TrueFalse
-          question="Q11. This menu felt realistic for a real restaurant."
+          question="This menu felt realistic for a real restaurant."
           value={q11}
           onChange={setQ11}
           required
@@ -56,7 +57,7 @@ export function MenuPerceptions({ onComplete, onBack, saveResponse }: MenuPercep
 
       {step === 1 && (
         <TrueFalse
-          question="Q12. This menu felt innovative."
+          question="This menu felt innovative."
           value={q12}
           onChange={setQ12}
           required
@@ -65,7 +66,7 @@ export function MenuPerceptions({ onComplete, onBack, saveResponse }: MenuPercep
 
       {step === 2 && (
         <TrueFalse
-          question="Q13. I felt engaged while using this menu."
+          question="I felt engaged while using this menu."
           value={q13}
           onChange={setQ13}
           required

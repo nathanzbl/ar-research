@@ -5,16 +5,17 @@ interface MenuChoiceBlockProps {
   onComplete: () => void;
   onBack: () => void;
   saveResponse: (questionId: string, value: string | string[]) => void;
+  startAtEnd?: boolean;
 }
 
-export function MenuChoiceBlock({ onComplete, onBack, saveResponse }: MenuChoiceBlockProps) {
-  const [step, setStep] = useState(0);
+export function MenuChoiceBlock({ onComplete, onBack, saveResponse, startAtEnd }: MenuChoiceBlockProps) {
+  const [step, setStep] = useState(startAtEnd ? 8 : 0);
   const [menuChoice, setMenuChoice] = useState('');
   const [familiarity, setFamiliarity] = useState('');
   const [priceInfluence, setPriceInfluence] = useState('');
   const [flavorInfluence, setFlavorInfluence] = useState('');
   const [pastExperience, setPastExperience] = useState('');
-  const [percentageExplored, setPercentageExplored] = useState('');
+  const [percentageExplored, setPercentageExplored] = useState('50');
   const [decisionTime, setDecisionTime] = useState('');
   const [happinessConfidence, setHappinessConfidence] = useState('');
   const [overallExperience, setOverallExperience] = useState('');
@@ -28,11 +29,11 @@ export function MenuChoiceBlock({ onComplete, onBack, saveResponse }: MenuChoice
   ];
 
   const familiarityOptions = [
-    { value: '1', label: 'Not at all familiar' },
-    { value: '2', label: 'Slightly familiar' },
-    { value: '3', label: 'Moderately familiar' },
-    { value: '4', label: 'Very familiar' },
-    { value: '5', label: 'Extremely familiar' },
+    { value: '1', label: 'Very Familiar' },
+    { value: '2', label: 'Somewhat Familiar' },
+    { value: '3', label: 'Completely new to me' },
+
+
   ];
 
   const timeOptions = [
@@ -118,14 +119,39 @@ export function MenuChoiceBlock({ onComplete, onBack, saveResponse }: MenuChoice
   return (
     <div className="space-y-6">
       {step === 0 && (
-        <TextInput
-          question="Q3. Based on the menu you just viewed, which item would you most likely order?"
-          value={menuChoice}
-          onChange={setMenuChoice}
-          placeholder="Enter the name of the menu item..."
-          multiline={false}
-          required
-        />
+        <div className="space-y-4">
+          <p className="text-lg font-medium text-byu-dark">
+            Based on the menu you just viewed, which item would you most likely order?
+            <span className="text-byu-error ml-1">*</span>
+          </p>
+          <select
+            value={menuChoice}
+            onChange={(e) => setMenuChoice(e.target.value)}
+            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-byu-navy/20 focus:border-byu-navy transition-colors bg-white text-byu-dark"
+          >
+            <option value="">Select a menu item...</option>
+            {[
+              'Agadashi Tofu',
+              'Chicken Karage',
+              'Curry Croquette',
+              'Japanese Style Fries',
+              'Seaweed Salad',
+              'Kids Ramen',
+              'Gyoza Ramen',
+              'Black Garlic Pork Ramen',
+              'Miso Ramen',
+              'Niku Spicy Pork Ramen',
+              'Tonkotsu Ramen',
+              'Veggie Shoyu Ramen',
+              'Edamame',
+              'Gyoza',
+              'Ikageso',
+              'Takoyaki',
+            ].map((item) => (
+              <option key={item} value={item}>{item}</option>
+            ))}
+          </select>
+        </div>
       )}
 
       {step === 1 && (
@@ -140,7 +166,7 @@ export function MenuChoiceBlock({ onComplete, onBack, saveResponse }: MenuChoice
 
       {step === 2 && (
         <SingleChoice
-          question="Q4. How much did the price influence your choice?"
+          question="How much did the price influence your choice?"
           options={influenceOptions}
           value={priceInfluence}
           onChange={setPriceInfluence}
@@ -150,7 +176,7 @@ export function MenuChoiceBlock({ onComplete, onBack, saveResponse }: MenuChoice
 
       {step === 3 && (
         <SingleChoice
-          question="Q5. How much did the expected flavor/taste influence your choice?"
+          question="How much did the expected flavor/taste influence your choice?"
           options={influenceOptions}
           value={flavorInfluence}
           onChange={setFlavorInfluence}
@@ -160,7 +186,7 @@ export function MenuChoiceBlock({ onComplete, onBack, saveResponse }: MenuChoice
 
       {step === 4 && (
         <SingleChoice
-          question="Q6. How much did past experience with this type of dish influence your choice?"
+          question="How much did past experience with this type of dish influence your choice?"
           options={influenceOptions}
           value={pastExperience}
           onChange={setPastExperience}
@@ -174,25 +200,20 @@ export function MenuChoiceBlock({ onComplete, onBack, saveResponse }: MenuChoice
             About what percentage of the menu did you explore before making your decision?
             <span className="text-byu-error ml-1">*</span>
           </p>
-          <div className="flex items-center gap-2">
+          <div className="space-y-2">
             <input
-              type="text"
-              inputMode="numeric"
-              value={percentageExplored}
-              onChange={(e) => {
-                const value = e.target.value;
-                // Allow empty string or only digits
-                if (value === '' || /^\d+$/.test(value)) {
-                  const num = parseInt(value, 10);
-                  if (value === '' || (num >= 0 && num <= 100)) {
-                    setPercentageExplored(value);
-                  }
-                }
-              }}
-              placeholder="e.g., 75"
-              className="w-24 p-3 border-2 border-gray-200 rounded-lg focus:ring-2 focus:ring-byu-navy/20 focus:border-byu-navy transition-colors"
+              type="range"
+              min="0"
+              max="100"
+              value={percentageExplored || '50'}
+              onChange={(e) => setPercentageExplored(e.target.value)}
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-byu-navy"
             />
-            <span className="text-byu-gray">%</span>
+            <div className="flex justify-between text-sm text-byu-gray">
+              <span>0%</span>
+              <span className="text-lg font-medium text-byu-dark">{percentageExplored || 50}%</span>
+              <span>100%</span>
+            </div>
           </div>
         </div>
       )}
