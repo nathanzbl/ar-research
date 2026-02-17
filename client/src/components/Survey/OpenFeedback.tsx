@@ -36,6 +36,16 @@ export function OpenFeedback({ onComplete, onBack, saveResponse, startAtEnd }: O
     }
   };
 
+  const handleSkip = () => {
+    const questionIds = ['Q14', 'Q15', 'Q16'];
+    saveResponse(questionIds[step], 'SKIPPED');
+    if (step === 2) {
+      onComplete();
+    } else {
+      setStep(step + 1);
+    }
+  };
+
   const handleBack = () => {
     if (step > 0) {
       setStep(step - 1);
@@ -82,6 +92,12 @@ export function OpenFeedback({ onComplete, onBack, saveResponse, startAtEnd }: O
           className="flex-1 bg-gray-100 text-byu-dark py-3 px-6 rounded-lg font-medium hover:bg-gray-200 transition-colors border border-gray-300"
         >
           Back
+        </button>
+        <button
+          onClick={handleSkip}
+          className="flex-1 py-3 px-6 rounded-lg font-medium transition-colors text-byu-gray hover:text-byu-dark hover:bg-gray-100 border border-gray-300"
+        >
+          Skip
         </button>
         <button
           onClick={handleNext}

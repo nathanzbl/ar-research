@@ -72,6 +72,20 @@ export function ExperienceRatings({ onComplete, onBack, saveResponse, startAtEnd
     }
   };
 
+  const handleSkip = () => {
+    const questionIds = [
+      usabilityItems.map((i) => i.id),
+      satisfactionItems.map((i) => i.id),
+      ['Q10'],
+    ];
+    questionIds[step].forEach((id) => saveResponse(id, 'SKIPPED'));
+    if (step === 2) {
+      onComplete();
+    } else {
+      setStep(step + 1);
+    }
+  };
+
   const handleBack = () => {
     if (step > 0) {
       setStep(step - 1);
@@ -124,6 +138,12 @@ export function ExperienceRatings({ onComplete, onBack, saveResponse, startAtEnd
           className="flex-1 bg-gray-100 text-byu-dark py-3 px-6 rounded-lg font-medium hover:bg-gray-200 transition-colors border border-gray-300"
         >
           Back
+        </button>
+        <button
+          onClick={handleSkip}
+          className="flex-1 py-3 px-6 rounded-lg font-medium transition-colors text-byu-gray hover:text-byu-dark hover:bg-gray-100 border border-gray-300"
+        >
+          Skip
         </button>
         <button
           onClick={handleNext}

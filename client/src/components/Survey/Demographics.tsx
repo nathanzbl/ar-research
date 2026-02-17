@@ -76,6 +76,19 @@ export function Demographics({ onComplete, onBack, saveResponse, startAtEnd }: D
     }
   };
 
+  const handleSkip = () => {
+    const questionIds = ['Q17', 'Q18', 'Q19', 'Q25', 'Q26', 'Q27'];
+    saveResponse(questionIds[step], 'SKIPPED');
+    if (step === 3) {
+      // If skipping the AR yes/no, also skip the AR extent follow-up
+      setStep(5);
+    } else if (step === 5) {
+      onComplete();
+    } else {
+      setStep(step + 1);
+    }
+  };
+
   const handleBack = () => {
     if (step === 5 && arExperience === 'no') {
       setStep(3); // Go back to AR experience question if they skipped AR extent
@@ -219,6 +232,12 @@ export function Demographics({ onComplete, onBack, saveResponse, startAtEnd }: D
           className="flex-1 bg-gray-100 text-byu-dark py-3 px-6 rounded-lg font-medium hover:bg-gray-200 transition-colors border border-gray-300"
         >
           Back
+        </button>
+        <button
+          onClick={handleSkip}
+          className="flex-1 py-3 px-6 rounded-lg font-medium transition-colors text-byu-gray hover:text-byu-dark hover:bg-gray-100 border border-gray-300"
+        >
+          Skip
         </button>
         <button
           onClick={handleNext}

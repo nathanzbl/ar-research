@@ -108,6 +108,16 @@ export function MenuChoiceBlock({ onComplete, onBack, saveResponse, startAtEnd }
     }
   };
 
+  const handleSkip = () => {
+    const questionIds = ['Q3', 'Q3b', 'Q4', 'Q5', 'Q6', 'Q6b', 'Q6c', 'Q6d', 'Q6e'];
+    saveResponse(questionIds[step], 'SKIPPED');
+    if (step === 8) {
+      onComplete();
+    } else {
+      setStep(step + 1);
+    }
+  };
+
   const handleBack = () => {
     if (step > 0) {
       setStep(step - 1);
@@ -255,6 +265,12 @@ export function MenuChoiceBlock({ onComplete, onBack, saveResponse, startAtEnd }
           className="flex-1 bg-gray-100 text-byu-dark py-3 px-6 rounded-lg font-medium hover:bg-gray-200 transition-colors border border-gray-300"
         >
           Back
+        </button>
+        <button
+          onClick={handleSkip}
+          className="flex-1 py-3 px-6 rounded-lg font-medium transition-colors text-byu-gray hover:text-byu-dark hover:bg-gray-100 border border-gray-300"
+        >
+          Skip
         </button>
         <button
           onClick={handleNext}
