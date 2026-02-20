@@ -318,6 +318,10 @@ router.get('/export', async (_req: Request, res: Response) => {
       return val;
     };
 
+    // Survey question IDs (Q-prefixed only) used to determine extra credit eligibility
+    const surveyQuestionIds = sortedQuestionIds.filter((id) => id.startsWith('Q'));
+    const totalSurveyQuestions = surveyQuestionIds.length;
+
     const allColumns = [
       'session_id',
       'condition_type',
@@ -326,6 +330,8 @@ router.get('/export', async (_req: Request, res: Response) => {
       'completed_at',
       'is_screened_out',
       ...sortedQuestionIds,
+      'extra_credit_eligible',
+      'extra_credit_score',
     ];
 
     // Qualtrics Row 1: Field IDs (short column names)
@@ -339,6 +345,8 @@ router.get('/export', async (_req: Request, res: Response) => {
       started_at: 'Started At',
       completed_at: 'Completed At',
       is_screened_out: 'Screened Out (true=1, false=0)',
+      extra_credit_eligible: 'Extra Credit Eligible (completed survey and answered >50% of questions)',
+      extra_credit_score: 'Extra Credit Score',
     };
     const row2_labels = allColumns.map((col) => {
       if (META_LABELS[col]) return escCsv(META_LABELS[col]);
@@ -354,6 +362,15 @@ router.get('/export', async (_req: Request, res: Response) => {
     // Data rows
     const dataRows = sessionsResult.rows.map((session) => {
       const responses = responsesBySession[session.id] || {};
+
+      const completedSurvey = session.completed_at !== null && !session.is_screened_out;
+      const answeredCount = surveyQuestionIds.filter((qId) => {
+        const val = responses[qId];
+        return val && val.trim() !== '';
+      }).length;
+      const answeredMoreThanHalf = totalSurveyQuestions > 0 && answeredCount > totalSurveyQuestions / 2;
+      const extraCreditEligible = completedSurvey && answeredMoreThanHalf;
+
       return [
         session.id,
         ENCODING_MAPS._condition[session.condition_type] ?? session.condition_type,
@@ -366,6 +383,8 @@ router.get('/export', async (_req: Request, res: Response) => {
           const encoded = encodeValue(qId, raw);
           return escCsv(encoded);
         }),
+        extraCreditEligible ? 'TRUE' : 'FALSE',
+        extraCreditEligible ? '2.75' : '',
       ];
     });
 
